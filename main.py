@@ -280,6 +280,23 @@ async def durum():
     }
 
 
+@app.get("/api/debug/env")
+async def debug_env():
+    """GECICI: Environment variables'larin durumu (secret sizdirmaz)."""
+    import os
+    return {
+        "GITHUB_TOKEN_var_mi": bool(os.environ.get("GITHUB_TOKEN")),
+        "GITHUB_TOKEN_uzunluk": len(os.environ.get("GITHUB_TOKEN", "")),
+        "GITHUB_TOKEN_basi": os.environ.get("GITHUB_TOKEN", "")[:10],
+        "GITHUB_REPO_degeri": os.environ.get("GITHUB_REPO", "YOK"),
+        "RATE_LIMIT_DAKIKA_degeri": os.environ.get("RATE_LIMIT_DAKIKA", "YOK"),
+        "iliskili_env_keys": sorted([k for k in os.environ.keys()
+                                        if "GITHUB" in k.upper()
+                                        or "RATE" in k.upper()
+                                        or "TOKEN" in k.upper()]),
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8765))
