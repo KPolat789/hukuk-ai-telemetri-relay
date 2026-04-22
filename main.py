@@ -282,18 +282,24 @@ async def durum():
 
 @app.get("/api/debug/env")
 async def debug_env():
-    """GECICI: Environment variables'larin durumu (secret sizdirmaz)."""
+    """GECICI: Environment variables genis rapor (secret sizdirmaz)."""
     import os
+    tum_keys = sorted(os.environ.keys())
+    railway_keys = [k for k in tum_keys if k.startswith("RAILWAY")]
+    bizim_keys = [k for k in tum_keys if k in (
+        "GITHUB_TOKEN", "GITHUB_REPO", "RATE_LIMIT_DAKIKA", "SHARED_SECRET", "DEV_MODE"
+    )]
     return {
         "GITHUB_TOKEN_var_mi": bool(os.environ.get("GITHUB_TOKEN")),
         "GITHUB_TOKEN_uzunluk": len(os.environ.get("GITHUB_TOKEN", "")),
-        "GITHUB_TOKEN_basi": os.environ.get("GITHUB_TOKEN", "")[:10],
         "GITHUB_REPO_degeri": os.environ.get("GITHUB_REPO", "YOK"),
         "RATE_LIMIT_DAKIKA_degeri": os.environ.get("RATE_LIMIT_DAKIKA", "YOK"),
-        "iliskili_env_keys": sorted([k for k in os.environ.keys()
-                                        if "GITHUB" in k.upper()
-                                        or "RATE" in k.upper()
-                                        or "TOKEN" in k.upper()]),
+        "PORT_degeri": os.environ.get("PORT", "YOK"),
+        "toplam_env_sayisi": len(os.environ),
+        "railway_keys_sayisi": len(railway_keys),
+        "railway_keys": railway_keys,
+        "bizim_keys_bulunan": bizim_keys,
+        "tum_keys": tum_keys,
     }
 
 
